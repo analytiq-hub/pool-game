@@ -1,0 +1,125 @@
+:root {
+  --panel: rgba(22, 30, 27, 0.72);
+  --panel-border: rgba(255, 255, 255, 0.12);
+  --text: #f4f1ea;
+  --muted: #b9c4bd;
+  --accent: #23c48a;
+  --gold: #ffd76a;
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+  background: #efe3dc;
+  color: var(--text);
+}
+
+#app { position: fixed; inset: 0; touch-action: none; }
+#app canvas { display: block; }
+
+.hud { position: absolute; inset: 0; pointer-events: none; user-select: none; }
+.hud > * { pointer-events: auto; }
+
+.players {
+  position: absolute; top: 12px; left: 50%; transform: translateX(-50%);
+  display: flex; gap: 10px;
+}
+.card {
+  min-width: 190px; padding: 8px 12px; border-radius: 12px;
+  background: var(--panel); border: 1px solid var(--panel-border);
+  backdrop-filter: blur(6px); transition: box-shadow 0.2s, border-color 0.2s;
+}
+.card.active { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(35, 196, 138, 0.35); }
+.card .name { font-weight: 700; font-size: 15px; }
+.card.active .name::after { content: ' ●'; color: var(--accent); }
+.card .group { font-size: 12px; color: var(--muted); margin: 2px 0 6px; }
+.chips { display: flex; gap: 3px; min-height: 18px; }
+.chip {
+  width: 18px; height: 18px; border-radius: 50%; position: relative;
+  box-shadow: inset -2px -2px 3px rgba(0,0,0,0.35);
+}
+.chip i {
+  position: absolute; inset: 4px; border-radius: 50%; background: #fbfaf5; color: #111;
+  font: 700 7px/10px system-ui, sans-serif; font-style: normal; text-align: center;
+}
+.chip.potted { opacity: 0.22; }
+
+.message {
+  position: absolute; top: 96px; left: 50%; transform: translate(-50%, -8px);
+  max-width: min(90vw, 560px); padding: 9px 16px; border-radius: 999px;
+  background: var(--panel); border: 1px solid var(--panel-border);
+  font-size: 14px; text-align: center; opacity: 0; transition: opacity 0.25s, transform 0.25s;
+  pointer-events: none;
+}
+.message.show { opacity: 1; transform: translate(-50%, 0); }
+
+.toolbar { position: absolute; top: 12px; right: 12px; display: flex; gap: 6px; }
+button {
+  font: inherit; font-size: 13px; color: var(--text); cursor: pointer;
+  padding: 7px 12px; border-radius: 9px;
+  background: var(--panel); border: 1px solid var(--panel-border);
+}
+button:hover { border-color: rgba(255,255,255,0.35); }
+button.primary { background: var(--accent); border-color: transparent; color: #062b1d; font-weight: 700; }
+
+.power {
+  position: absolute; left: 16px; bottom: 20px; width: 22px; height: 160px;
+  border-radius: 11px; background: var(--panel); border: 1px solid var(--panel-border);
+  overflow: hidden;
+}
+.power .fill {
+  position: absolute; left: 0; right: 0; bottom: 0; height: 0%;
+  background: linear-gradient(to top, #23c48a, #ffd76a 60%, #f2622f);
+}
+.label {
+  position: absolute; font-size: 11px; color: var(--muted); white-space: nowrap;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+}
+.power .label { bottom: -18px; left: 50%; transform: translateX(-50%); }
+.power { overflow: visible; }
+.power .fill { border-radius: 11px; }
+
+.spin { position: absolute; right: 18px; bottom: 26px; }
+.spin .face {
+  width: 86px; height: 86px; border-radius: 50%; position: relative; cursor: crosshair;
+  background: radial-gradient(circle at 35% 30%, #ffffff, #e8e5da 55%, #b9b5a8);
+  box-shadow: 0 4px 14px rgba(0,0,0,0.3); touch-action: none;
+}
+.spin .face::before, .spin .face::after {
+  content: ''; position: absolute; background: rgba(0,0,0,0.12);
+}
+.spin .face::before { left: 50%; top: 10%; bottom: 10%; width: 1px; }
+.spin .face::after { top: 50%; left: 10%; right: 10%; height: 1px; }
+.spin .dot {
+  position: absolute; left: 50%; top: 50%; width: 14px; height: 14px; margin: -7px 0 0 -7px;
+  border-radius: 50%; background: #2f6fb3; box-shadow: 0 0 0 2px rgba(255,255,255,0.8);
+}
+.spin .label { left: 50%; transform: translateX(-50%); bottom: -18px; }
+
+.overlay {
+  position: absolute; inset: 0; display: grid; place-items: center;
+  background: rgba(10, 16, 13, 0.35);
+}
+.overlay.hidden { display: none; }
+.panel {
+  padding: 22px 26px; border-radius: 16px; max-width: min(92vw, 520px);
+  background: rgba(22, 30, 27, 0.92); border: 1px solid var(--panel-border); text-align: center;
+}
+.panel h2 { margin: 0 0 14px; font-size: 22px; }
+.panel.help { text-align: left; }
+.panel.help ul { padding-left: 18px; line-height: 1.55; font-size: 14px; }
+.panel.help p { font-size: 13px; color: var(--muted); line-height: 1.5; }
+.panel.help button { display: block; margin: 12px auto 0; }
+
+@media (max-width: 640px) {
+  .players { top: 56px; }
+  .card { min-width: 0; padding: 6px 8px; }
+  .chip { width: 14px; height: 14px; }
+  .chip i { inset: 3px; font-size: 0; }
+  .message { top: 140px; }
+  .toolbar { left: 12px; right: 12px; justify-content: center; }
+}
