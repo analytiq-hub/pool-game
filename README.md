@@ -3,6 +3,8 @@
 A three.js 8-ball pool game modelled on a small tabletop toy table
 (reference photos in `docs/images/`, which is git-ignored).
 
+**Play it:** https://analytiq-hub.github.io/pool-game/ (deployed to GitHub Pages on every push to `main`).
+
 ## Run it locally
 
 Requires Node.js 20+.
